@@ -1,7 +1,13 @@
-import { View } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
+import { RootStackScreenProps } from '../router/types';
 
-const UserDetail = () => {
-  return <View></View>;
+const UserDetail = ({ route }: RootStackScreenProps<'UserDetail'>) => {
+  return (
+    <View>
+      <Text>{route.params.id}</Text>
+    </View>
+  );
 };
 
 export default UserDetail;
