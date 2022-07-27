@@ -13,17 +13,26 @@ const getUserById = createAsyncThunk<UserProps, number>(
   async userId => await api.getUserById(userId),
 );
 
-const initialState: Props = { status: 'idle', userList: [], error: null };
+const initialState: Props = {
+  status: 'idle',
+  userList: [],
+  user: null,
+  error: null,
+};
 
 const slice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    cleanUser: state => {
+      state.user = null;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(getAllUsers.pending || getUserById.pending, state => {
+        state = initialState;
         state.status = 'loading';
-        state.error = null;
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
         state.status = 'idle';
@@ -31,8 +40,7 @@ const slice = createSlice({
       })
       .addCase(getUserById.fulfilled, (state, action) => {
         state.status = 'idle';
-        console.log(action.payload);
-        // state. = action.payload;
+        state.user = action.payload;
       })
       .addCase(getAllUsers.rejected, (state, action) => {
         state.status = 'error';
@@ -41,4 +49,10 @@ const slice = createSlice({
   },
 });
 
-export default { slice, getAllUsers, getUserById, reducer: slice.reducer };
+export default {
+  slice,
+  getAllUsers,
+  getUserById,
+  reducer: slice.reducer,
+  ...slice.actions,
+};
