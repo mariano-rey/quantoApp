@@ -9,11 +9,12 @@ export interface UserProps {
 }
 
 export interface UserListItemProps extends UserProps {
-  onPress: () => void;
+  onPress: (id: number) => void;
 }
 
 export interface Props {
   status: 'idle' | 'loading' | 'error';
   userList: UserProps[];
+  user: UserProps | null;
   error: SerializedError | null;
 }

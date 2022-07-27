@@ -10,9 +10,7 @@ const UserList = ({ navigation }: RootStackScreenProps<'UserList'>) => {
   const { status, userList, error } = useAppSelector(({ users }) => users);
   const dispatch = useAppDispatch();
 
-  // const onPressUser = () => {
-  //   // navigation.push('UserDetail', { id: '1' });
-  // };
+  const onPressUser = (id: number) => navigation.push('UserDetail', { id });
 
   useEffect(() => {
     if (!userList.length) {
@@ -27,7 +25,9 @@ const UserList = ({ navigation }: RootStackScreenProps<'UserList'>) => {
   ) : (
     <FlatList
       data={userList}
-      renderItem={({ item }) => <UserListItem {...item} />}
+      renderItem={({ item }) => (
+        <UserListItem {...item} onPress={onPressUser} />
+      )}
       keyExtractor={item => item.id.toString()}
       ItemSeparatorComponent={Components.Divider}
     />
