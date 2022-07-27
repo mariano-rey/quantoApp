@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { ScrollView, Text } from 'react-native';
-import { ScaledSheet } from 'react-native-size-matters';
+import { ActivityIndicator, FlatList, Text } from 'react-native';
+import Components from '../../components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { RootStackScreenProps } from '../router/types';
+import UserListItem from './UserListItem';
 import UserSlice from './userSlice';
 
 const UserList = ({ navigation }: RootStackScreenProps<'UserList'>) => {
@@ -13,38 +14,24 @@ const UserList = ({ navigation }: RootStackScreenProps<'UserList'>) => {
   //   // navigation.push('UserDetail', { id: '1' });
   // };
 
-  const renderContent = () => {
-    if (error) {
-      return <Text>{error.message}</Text>;
-    }
-    if (status === 'loading') {
-      return <Text>LOADING...</Text>;
-    }
-
-    return userList.map(({ id, first_name, last_name }) => (
-      <Text key={id}>
-        {first_name} {last_name}
-      </Text>
-    ));
-  };
-
   useEffect(() => {
     if (!userList.length) {
       dispatch(UserSlice.getAllUsers({ page: 0, per_page: 10 }));
     }
   }, [dispatch, userList.length]);
 
-  return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic">
-      {renderContent()}
-    </ScrollView>
+  return error ? (
+    <Text>{error.message}</Text>
+  ) : status === 'loading' ? (
+    <ActivityIndicator />
+  ) : (
+    <FlatList
+      data={userList}
+      renderItem={({ item }) => <UserListItem {...item} />}
+      keyExtractor={item => item.id.toString()}
+      ItemSeparatorComponent={Components.Divider}
+    />
   );
 };
-
-const styles = ScaledSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default UserList;
