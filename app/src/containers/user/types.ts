@@ -8,6 +8,10 @@ export interface UserProps {
   avatar: string;
 }
 
+export interface UserListItemProps extends UserProps {
+  onPress: () => void;
+}
+
 export interface Props {
   status: 'idle' | 'loading' | 'error';
   userList: UserProps[];
